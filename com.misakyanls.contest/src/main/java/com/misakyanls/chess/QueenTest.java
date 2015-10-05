@@ -9,11 +9,8 @@ public class QueenTest {
 
 	@Test
 	public void takePositionsTest() {
-		int[][] board = new int[6][6];
-		queen.setCol(1);
-		queen.setRow(2);
-
-		queen.takePositions(board);
+		int[][] board = new int[3][3];
+		queen.set(board, 2, 2);
 		System.out.println(Arrays.deepToString(board));
 	}
 

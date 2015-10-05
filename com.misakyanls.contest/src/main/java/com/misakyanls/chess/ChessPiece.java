@@ -1,9 +1,13 @@
 package com.misakyanls.chess;
 
 public abstract class ChessPiece {
-	protected int row, col;
+	protected int row = -1, col = -1;
 
-	protected abstract void takePositions(int[][] board);
+	protected abstract void markTakePositions(int[][] board, boolean remove);
+
+	protected abstract void remove(int[][] board);
+
+	protected abstract boolean set(int[][] board, int row, int col);
 
 	public int getRow() {
 		return row;

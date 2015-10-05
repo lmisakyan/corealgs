@@ -4,49 +4,88 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class ChessProblem {
-	private static int[] b;
+	private static int[][] board;
 
-	static boolean unsafe(int y) {
-		int x = b[y];
-		for (int i = 1; i <= y; i++) {
-			int t = b[y - i];
-			if (t == x || t == x - i || t == x + i) {
-				return true;
+	static List<ChessPiece> createPieces(BufferedReader in) throws IOException {
+		int kings = 0, queens = 0, bishops = 0, rooks = 0, knights = 0;
+		List<ChessPiece> result = new ArrayList<>();
+		String line = null;
+		while ((line = in.readLine()) != null) {
+			StringTokenizer tokenizer = new StringTokenizer(line);
+			switch (tokenizer.nextToken()) {
+			case "K":
+				kings = Integer.parseInt(tokenizer.nextToken());
+				break;
+			case "Q":
+				queens = Integer.parseInt(tokenizer.nextToken());
+				break;
+			case "B":
+				bishops = Integer.parseInt(tokenizer.nextToken());
+				break;
+			case "R":
+				rooks = Integer.parseInt(tokenizer.nextToken());
+				break;
+			case "N":
+				knights = Integer.parseInt(tokenizer.nextToken());
+				break;
 			}
+			for (int i = 0; i < queens; ++i)
+				result.add(new Queen());
 		}
-		return false;
+		return result;
 	}
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		PrintWriter out = new PrintWriter(System.out);
+
 		StringTokenizer tokenizer = new StringTokenizer(in.readLine());
 		int m = Integer.parseInt(tokenizer.nextToken());
 		int n = Integer.parseInt(tokenizer.nextToken());
-		b = new int[n];
+		board = new int[m][n];
+		List<ChessPiece> pieces = createPieces(in);
 
-		int s = 0;
+		int result = 0;
 		int y = 0;
-		b[0] = -1;
+		ChessPiece piece = pieces.get(y);
+
 		while (y >= 0) {
-			do {
-				b[y]++;
-			} while ((b[y] < m) && unsafe(y));
-			if (b[y] < m) {
+			if (canStand(piece))
 				if (y < n - 1) {
-					b[++y] = -1;
+					piece = pieces.get(++y);
 				} else {
-					++s;
+					++result;
 				}
-			} else {
-				y--;
+			else if (--y >= 0) {
+				piece.remove(board);
+				piece = pieces.get(y);
+				piece.markTakePositions(board, true);
 			}
 		}
 
-		out.println(s);
+		out.println(result);
 		out.flush();
+	}
+
+	private static boolean canStand(ChessPiece piece) {
+		int r = piece.getRow();
+		int c = piece.getCol();
+		while ((r = r == -1 ? 0 : r) < board.length) {
+			while ((c = c == -1 ? 0 : c + 1) < board[r].length) {
+				if (board[r][c] == 0) {
+					piece.remove(board);
+					return piece.set(board, r, c);
+				}
+				++c;
+			}
+			c = 0;
+			++r;
+		}
+		return false;
 	}
 }
