@@ -10,9 +10,11 @@ import java.util.Arrays;
  * Given a list of N integers, your task is to select K integers from the list
  * such that its unfairness is minimized. 
  * 
- * If (x1,x2,x3,…,xk) are K numbers
+ * <p>If (x1,x2,x3,…,xk) are K numbers
  * selected from the list N, the unfairness is defined as
- *   max(x1,x2,…,xk)−min(x1,x2,…,xk) 
+ * <p><blockquote><pre>
+ *   max(x1,x2,…,xk)−min(x1,x2,…,xk)
+ * </pre></blockquote> 
  * where max denotes the largest integer among
  * the elements of K, and min denotes the smallest integer among the elements of K.
  * 
