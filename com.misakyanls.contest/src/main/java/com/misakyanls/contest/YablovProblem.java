@@ -11,7 +11,7 @@ public class YablovProblem {
 
 		int n = Integer.parseInt(in.readLine());
 		char[][] chessBoard = new char[n][];
-
+		
 		for (int i = 0; i < n; ++i) {
 			chessBoard[i] = in.readLine().toCharArray();
 		}

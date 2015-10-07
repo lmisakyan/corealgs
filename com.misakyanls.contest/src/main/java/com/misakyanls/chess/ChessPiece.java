@@ -5,9 +5,21 @@ public abstract class ChessPiece {
 
 	protected abstract void markTakePositions(int[][] board, boolean remove);
 
-	protected abstract void remove(int[][] board);
+	protected void remove(int[][] board) {
+		if (row == -1)
+			return;
+		board[row][col] = 0;
+		setCol(-1);
+		setRow(-1);
+	}
 
-	protected abstract boolean set(int[][] board, int row, int col);
+	protected boolean set(int[][] board, int row, int col) {
+		this.col = col;
+		this.row = row;
+		markTakePositions(board, false);
+		board[row][col] = -1;
+		return true;
+	}
 
 	public int getRow() {
 		return row;

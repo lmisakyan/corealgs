@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -34,44 +35,56 @@ public class ChessProblem {
 				knights = Integer.parseInt(tokenizer.nextToken());
 				break;
 			}
-			for (int i = 0; i < queens; ++i)
-				result.add(new Queen());
 		}
+		for (int i = 0; i < queens; ++i)
+			result.add(new Queen());
+		for (int i = 0; i < rooks; ++i)
+			result.add(new Rook());
+		for (int i = 0; i < knights; ++i)
+			result.add(new Knight());
 		return result;
 	}
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		PrintWriter out = new PrintWriter(System.out);
-
 		StringTokenizer tokenizer = new StringTokenizer(in.readLine());
 		int m = Integer.parseInt(tokenizer.nextToken());
 		int n = Integer.parseInt(tokenizer.nextToken());
+		int result = 0;
+
 		board = new int[m][n];
 		List<ChessPiece> pieces = createPieces(in);
-
-		int result = 0;
+		int pieceCount = pieces.size();
 		int y = 0;
+		boolean newPiece = true;
 		ChessPiece piece = pieces.get(y);
-
 		while (y >= 0) {
-			if (canStand(piece))
-				if (y < n - 1) {
+			if (canStand(piece, newPiece))
+				if (y < pieceCount - 1) {
+					ChessPiece prev = piece;
 					piece = pieces.get(++y);
+					if (prev.getClass() == piece.getClass()) {
+						piece.setRow(prev.getRow());
+						piece.setCol(prev.getCol());
+					}
+					newPiece = true;
 				} else {
 					++result;
+					System.out.println(Arrays.deepToString(board));
+					piece.markTakePositions(board, true);
 				}
 			else if (--y >= 0) {
 				piece.remove(board);
 				piece = pieces.get(y);
+				newPiece = false;
 			}
 		}
-
 		out.println(result);
 		out.flush();
 	}
 
-	private static boolean canStand(ChessPiece piece) {
+	private static boolean canStand(ChessPiece piece, boolean newPiece) {
 		if (piece.getRow() != -1)
 			piece.markTakePositions(board, true);
 
@@ -79,8 +92,13 @@ public class ChessProblem {
 		int c = piece.getCol();
 		while ((r = r == -1 ? 0 : r) < board.length) {
 			while ((c = c == -1 ? 0 : c) < board[r].length) {
+		r = r == -1 ? 0 : r;
+		c = c == -1 ? 0 : c + 1;
+		while (r < board.length) {
+			while (c < board[r].length) {
 				if (board[r][c] == 0) {
-					piece.remove(board);
+					if (!newPiece)
+						piece.remove(board);
 					return piece.set(board, r, c);
 				}
 				++c;
