@@ -25,8 +25,8 @@ public class Queen extends ChessPiece {
 		if (row == -1)
 			return;
 		board[row][col] = 0;
-		setRow(-1);
-		setCol(-1);
+		//setRow(-1);
+		//setCol(-1);
 	}
 
 	@Override

@@ -64,7 +64,6 @@ public class ChessProblem {
 			else if (--y >= 0) {
 				piece.remove(board);
 				piece = pieces.get(y);
-				piece.markTakePositions(board, true);
 			}
 		}
 
@@ -73,10 +72,13 @@ public class ChessProblem {
 	}
 
 	private static boolean canStand(ChessPiece piece) {
+		if (piece.getRow() != -1)
+			piece.markTakePositions(board, true);
+
 		int r = piece.getRow();
 		int c = piece.getCol();
 		while ((r = r == -1 ? 0 : r) < board.length) {
-			while ((c = c == -1 ? 0 : c + 1) < board[r].length) {
+			while ((c = c == -1 ? 0 : c) < board[r].length) {
 				if (board[r][c] == 0) {
 					piece.remove(board);
 					return piece.set(board, r, c);
